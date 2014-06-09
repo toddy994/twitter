@@ -27,6 +27,6 @@ ARGV.each do |hashtag|
   search_for_tweets_to(hashtag, client, number_to_follow).each do |tweet|
     puts "  #{tweet.user.username}"
     follow_user(tweet.user, client)
-  sleep 5
-end
+    sleep 5
+  end
 end
