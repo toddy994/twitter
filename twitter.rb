@@ -32,7 +32,7 @@ follower = Follower.new(client)
 searcher = Searcher.new(client)
 
 ARGV.each do |hashtag|
-  query_string = "##{hastag}"
+  query_string = "##{hashtag}"
   searcher.search(query_string).each do |tweet|
     follower.follow(tweet.user)
     sleep 5
