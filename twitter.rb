@@ -8,8 +8,8 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ""
 end
 
-def search_for_tweets_to(hashtag, client, number_to_follow)
-  client.search("##{hashtag}").take(number_to_follow)
+def search_for_tweets_to(hashtag, client)
+  client.search("##{hashtag}", count: 100)
 end
 
 def follow_user(user, client)
@@ -23,9 +23,7 @@ end
 number_to_follow = ARGV.shift.to_i
 
 ARGV.each do |hashtag|
-  puts "auto-following #{number_to_follow} people who recently used the following hashtag: #{hashtag}"
-  search_for_tweets_to(hashtag, client, number_to_follow).each do |tweet|
-    puts "  #{tweet.user.username}"
+  search_for_tweets_to(hashtag, client).each do |tweet|
     follow_user(tweet.user, client)
     sleep 5
   end
