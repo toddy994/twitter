@@ -12,12 +12,13 @@ class Follower
 end
 
 class Searcher
-  def initialize(client)
-    @client = client
+  def initialize(client, n = 10)
+    @client      = client
+    @max_results = n
   end
 
   def search(query)
-    @client.search(query, count: 100)
+    @client.search(query, count: @max_results)
   end
 end
 
@@ -29,11 +30,13 @@ client = Twitter::REST::Client.new do |config|
 end
 
 follower = Follower.new(client)
-searcher = Searcher.new(client)
+searcher = Searcher.new(client, 500)
 
 ARGV.each do |hashtag|
+  puts "searching for: #{hashtag}"
   query_string = "##{hashtag}"
   searcher.search(query_string).each do |tweet|
+    puts "following someone"
     follower.follow(tweet.user)
     sleep 5
   end
