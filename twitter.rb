@@ -11,6 +11,16 @@ class Follower
   end
 end
 
+class Searcher
+  def initialize(client)
+    @client = client
+  end
+
+  def search(query)
+    @client.search(query, count: 100)
+  end
+end
+
 client = Twitter::REST::Client.new do |config|
   config.consumer_key        = ""
   config.consumer_secret     = ""
@@ -19,13 +29,11 @@ client = Twitter::REST::Client.new do |config|
 end
 
 follower = Follower.new(client)
-
-def search_for_tweets_to(hashtag, client)
-  client.search("##{hashtag}", count: 100)
-end
+searcher = Searcher.new(client)
 
 ARGV.each do |hashtag|
-  search_for_tweets_to(hashtag, client).each do |tweet|
+  query_string = "##{hastag}"
+  searcher.search(query_string).each do |tweet|
     follower.follow(tweet.user)
     sleep 5
   end
