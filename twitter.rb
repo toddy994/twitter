@@ -18,7 +18,7 @@ class Searcher
   end
 
   def search(query)
-    @client.search(query, count: @max_results)
+    @client.search(query, count: @max_results).take(@max_results)
   end
 end
 
@@ -30,14 +30,13 @@ client = Twitter::REST::Client.new do |config|
 end
 
 follower = Follower.new(client)
-searcher = Searcher.new(client, 500)
+searcher = Searcher.new(client, 25)
 
 ARGV.each do |hashtag|
   puts "searching for: #{hashtag}"
   query_string = "##{hashtag}"
   searcher.search(query_string).each do |tweet|
-    puts "following someone"
+    puts "following #{tweet.user.name}"
     follower.follow(tweet.user)
-    sleep 5
   end
 end
